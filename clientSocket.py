@@ -3,10 +3,9 @@ import pickle
 import threading
 from Messages.message_types import *
 from config import *
-from Message_Handler.message_receiving import (
+from Controllers.message_receiving import (
     recive_header_message,
-    recive_full_message,
-    recive_pdf_message,
+    recive_full_message
 )
 from Controllers.HandleMessage import MessageHandler
 from Messages.ConfigMessage import ConfigMessage
@@ -25,17 +24,14 @@ class ClientSocket:
             target=self.listen_for_message, name="listening_thread"
         )
         listening_thread.start()
-        files_watcher_thread = threading.Thread(target=FilesWatcher,args=[f'{get_project_root()}/pdf_files'],name='files_watcher_thread')
+        files_watcher_thread = threading.Thread(target=FilesWatcher,name='files_watcher_thread')
         files_watcher_thread.start()
 
     # listening for messages
     def listen_for_message(self):
         while True:
-            message_size, message_type = recive_header_message(self.client_socket)
+            message_size = recive_header_message(self.client_socket)
             if message_size:
-                if message_type == "PDF":
-                    recive_pdf_message(message_size, self.client_socket)
-                else:
                     full_message = recive_full_message(message_size, self.client_socket)
                     handle_message_thread = threading.Thread(
                         target=MessageHandler,
@@ -68,8 +64,8 @@ if __name__ == "__main__":
     msg1.set_type(SESSION_DATA)
     msg2.set_type(SESSION_CLOSE)
     x.send_msg(msg.json())
-    # x.send_msg(msg1.json())
-    # x.send_msg(msg2.json())
+    x.send_msg(msg1.json())
+    x.send_msg(msg2.json())
 
     
     

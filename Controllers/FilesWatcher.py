@@ -3,7 +3,7 @@ import time
 import os
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
-
+from utils.utils import get_project_root
 class PdfEventHandler(RegexMatchingEventHandler):
     PDF_REGEX = [r"^.+\.(([pP][dD][fF]))$"]
 
@@ -26,8 +26,8 @@ class PdfEventHandler(RegexMatchingEventHandler):
 
 
 class FilesWatcher:
-    def __init__(self, src_path):
-        self.__src_path = src_path
+    def __init__(self):
+        self.__src_path = f'{get_project_root()}/pdf_files'
         self.__event_handler = PdfEventHandler()
         self.__event_observer = Observer()
         self.run()

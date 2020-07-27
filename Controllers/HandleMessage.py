@@ -13,6 +13,7 @@ class MessageHandler:
     # here we send the message to its path (switch case)
     def handle_message_scenario(self):
         message_type = self.msg.get("message_type")
+        print(message_type)
         if message_type == SERVER_CONFIG_MESSAGE:
             if self.msg.get("ack"):
                 ack_message = Ack()
@@ -23,9 +24,15 @@ class MessageHandler:
         elif message_type == SESSION_CLOSE:
             print('close session')
         elif message_type == "PDF":
-            print("herreee")
-            print(self.msg.get("ticket_id"))
+            self.write_pdf_file()
 
+
+    def write_pdf_file(self):
+        pdf_content = self.msg.get('data')
+        with open(f'{get_project_root()}/pdf_files/Waybill.pdf', "wb") as f:
+            f.write(pdf_content)
+
+        
 
     # send message to client
     def send_msg_to_server(self, msg_obj=None):
