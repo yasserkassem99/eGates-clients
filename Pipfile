@@ -10,6 +10,8 @@ black = "*"
 requests = "*"
 black = "*"
 watchdog = "*"
+python-socketio = {extras = ["client"], version = "*"}
+eventlet = "*"
 
 [requires]
 python_version = "3.8"

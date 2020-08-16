@@ -4,6 +4,7 @@ import os
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
 from utils.utils import get_project_root
+
 class PdfEventHandler(RegexMatchingEventHandler):
     PDF_REGEX = [r"^.+\.(([pP][dD][fF]))$"]
 
@@ -20,17 +21,24 @@ class PdfEventHandler(RegexMatchingEventHandler):
         filename, ext = os.path.splitext(event.src_path)
         filename = f"{filename}.pdf"
         print(filename,'created')
-        os.system(f"lpr -P Canon_MF633C_635C {filename}")
+        printers = conn.getPrinters ()
+        # os.system(f"lpr -P Canon_MF633C_635C {filename}")
 
 
 
 
 class FilesWatcher:
+    '''
+    # listen for creation and deleting of files events
+    '''
     def __init__(self):
         self.__src_path = f'{get_project_root()}/pdf_files'
         self.__event_handler = PdfEventHandler()
         self.__event_observer = Observer()
         self.run()
+        
+        
+        
     def run(self):
         self.start()
         try:
